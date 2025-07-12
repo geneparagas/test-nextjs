@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head'
 import styles from '@/styles/Home.module.css'
 
@@ -11,16 +11,30 @@ interface Recipe {
 
 export default function Home() {
   const [view, setView] = useState<'list' | 'add' | 'view' | 'edit'>('list');
-  const [recipeItems, setRecipeItems] = useState<Recipe[]>(() => {
-    return [
+  const [recipeItems, setRecipeItems] = useState<Recipe[]>([]);
+
+  const [selectedItem, setSelectedItem] = useState<Recipe | null>(null);
+
+  useEffect(() => {
+    if (recipeItems.length === 0) return
+
+    localStorage.setItem('recipes', JSON.stringify(recipeItems))
+  }, [recipeItems]);
+
+  useEffect(() => {
+    const storeData = localStorage.getItem('recipes');
+
+    console.log('storeData', storeData)
+    
+    const value = storeData ? JSON.parse(storeData) : [
       {
         name: 'Gene Paragas',
         title: 'adobong manok'
       }
     ]
-  });
 
-  const [selectedItem, setSelectedItem] = useState<Recipe | null>(null);
+    setRecipeItems(value);
+  }, []);
 
   const addRecipe = (newRecipe: Recipe) => {
 
@@ -33,6 +47,15 @@ export default function Home() {
     setRecipeItems((prevRecipes: Recipe[]) => 
       prevRecipes.map((recipe: Recipe) => recipe.name === updatedRecipe.name ? updatedRecipe : recipe 
     ));
+    setView('list');
+  }
+
+  const deleteRecipe = (name: string) => {
+
+    setRecipeItems((prevRecipes: Recipe[]) => 
+      prevRecipes.filter((recipe: Recipe) => recipe.name !== name)
+    );
+
     setView('list');
   }
 
@@ -92,7 +115,7 @@ export default function Home() {
     )
   }
 
-  const RecipeDetails: React.FC<{recipe: Recipe; onEdit: (recipe: Recipe) => void;}> = ({recipe, onEdit}) => (
+  const RecipeDetails: React.FC<{recipe: Recipe; onEdit: (recipe: Recipe) => void; onDelete: (name: string) => void;}> = ({recipe, onEdit, onDelete}) => (
       <div className='container-fluid'>
           <div className='row justify-content-center'>
             <div className='col bg-white shadow-md p-3'>
@@ -104,10 +127,10 @@ export default function Home() {
                     <label htmlFor="name" className="form-label">Title</label>
                     <div>{recipe.title}</div>
                 </div>
-                <button type="submit" className="btn btn-primary" onClick={() => onEdit(recipe)}>Edit</button>
+                <button type="submit" className="btn btn-primary ml-3" onClick={() => onEdit(recipe)}>Edit</button>
+                <button type="submit" className="btn btn-danger" onClick={() => onDelete(recipe.name)}>Delete</button>
             </div>
           </div>
-          
         </div>
   )
 
@@ -142,7 +165,7 @@ export default function Home() {
           </div>
         </div>}
         {view === 'add' && <AddRecipeForm onSubmit={addRecipe} />}
-        {view === 'view' && <RecipeDetails recipe={selectedItem} onEdit={(recipe: Recipe) => {setSelectedItem(recipe); setView('edit'); }} />}
+        {view === 'view' && <RecipeDetails recipe={selectedItem} onEdit={(recipe: Recipe) => {setSelectedItem(recipe); setView('edit'); }} onDelete={deleteRecipe} />}
         {view === 'edit' && selectedItem && <AddRecipeForm onSubmit={updateRecipe} loadData={selectedItem} editMode={true} />}
       </main>
     </>
