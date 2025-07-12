@@ -13,6 +13,9 @@ const RecipeForm: React.FC<{recipe: Recipe; onEdit: (recipe: Recipe) => void; on
                     <label htmlFor="name" className="form-label">Title</label>
                     <div>{recipe.title}</div>
                 </div>
+                <div className="mb-3">
+                    <img src={recipe.image} className='w-25 h-auto' />
+                </div>
                 <button type="submit" className="btn btn-primary ml-3" onClick={() => onEdit(recipe)}>Edit</button>
                 <button type="submit" className="btn btn-danger" onClick={() => onDelete(recipe.name)}>Delete</button>
             </div>

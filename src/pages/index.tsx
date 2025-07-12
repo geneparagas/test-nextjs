@@ -26,7 +26,8 @@ export default function Home() {
     const value = storeData ? JSON.parse(storeData) : [
       {
         name: 'Gene Paragas',
-        title: 'adobong manok'
+        title: 'adobong manok',
+        image: '/images/adobo.jpg'
       }
     ]
 
