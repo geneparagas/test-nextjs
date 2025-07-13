@@ -15,7 +15,6 @@ import { z } from 'zod';
 // }
 
 const recipeSchema = z.object({
-    id: z.string().optional(),
     name: z.string().min(1, 'Name is required.'),
     email: z.string().min(1, 'Email is required.').email('Invalid email address.'),
     title: z.string().min(1, 'Title is required.'),
@@ -34,10 +33,10 @@ const RecipeForm: React.FC<{
     loadData?: Recipe; 
     editMode?: boolean; 
     goBack: () => void;
-}> = ({ onSubmit, loadData, editMode, goBack }) => {
+    onDelete: (name: string, image: string) => void;
+}> = ({ onSubmit, loadData, editMode, goBack, onDelete }) => {
 
     const [formData, setFormData] = useState<Omit<Recipe, 'image'> & { image: string | File | null }>(loadData || {
-        id: '',
         name: '',
         title: '',
         image: null,
@@ -258,6 +257,7 @@ const RecipeForm: React.FC<{
                                 {errors.instructions && <div className='invalid-feedback'>{errors.instructions}</div>}
                             </div>
                             <div className='mb-3'>
+                                {editMode && <button type="button" className="btn btn-danger" onClick={() => onDelete(formData.name, preview)}>Delete</button>}
                                 <button type="submit" className="btn btn-primary">{editMode ? 'update' : 'save'}</button>
                             </div>
                         </div>

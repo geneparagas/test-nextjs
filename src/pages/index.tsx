@@ -2,12 +2,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Head from 'next/head'
 import RecipeForm, { Recipe } from '@/components/Form';
 import RecipeList from '@/components/List';
-import RecipeDetails from '@/components/Details';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home() {
-  const [view, setView] = useState<'list' | 'add' | 'view' | 'edit'>('list');
+  const [view, setView] = useState<'list' | 'add' | 'edit'>('list');
   const [recipeItems, setRecipeItems] = useState<Recipe[]>([]);
 
   const [selectedItem, setSelectedItem] = useState<Recipe | null>(null);
@@ -32,9 +31,15 @@ export default function Home() {
 
     const value = storeData ? JSON.parse(storeData) : [
       {
-        name: 'Gene Paragas',
-        title: 'adobong manok',
-        image: '/images/adobo.jpg'
+        name: "Gene",
+        title: "Adobong Baboy",
+        image: "/images/adobong_baboy.jpg",
+        email: "gene@email.com",
+        description: "Adobong baboy filipino popular dish",
+        ingredients: "baboy, toyo, suka, bawang",
+        instructions: "instructions",
+        dateAdded: "2025-07-13T23:02:36.351Z",
+        isFavorite: false
       }
     ]
 
@@ -150,10 +155,10 @@ export default function Home() {
           searchText={searchText}
           setSearchText={setSearchText}
           clearFilter={clearFilter}
+          onEdit={(recipe: Recipe) => { setSelectedItem(recipe); setView('edit'); }}
         />}
-        {view === 'add' && <RecipeForm onSubmit={addRecipe} goBack={() => setView('list')} />}
-        {view === 'view' && <RecipeDetails recipe={selectedItem} onEdit={(recipe: Recipe) => { setSelectedItem(recipe); setView('edit'); }} onDelete={deleteRecipe} />}
-        {view === 'edit' && selectedItem && <RecipeForm onSubmit={updateRecipe} loadData={selectedItem} editMode={true} goBack={() => setView('list')} />}
+        {view === 'add' && <RecipeForm onSubmit={addRecipe} goBack={() => setView('list')} onDelete={deleteRecipe} />}
+        {view === 'edit' && selectedItem && <RecipeForm onSubmit={updateRecipe} loadData={selectedItem} editMode={true} goBack={() => setView('list')} onDelete={deleteRecipe}  />}
       </main>
     </>
   )

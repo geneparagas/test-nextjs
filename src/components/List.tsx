@@ -4,7 +4,7 @@ import { Recipe } from './Form';
 const RecipeList: React.FC<{
   filteredRecipeItems: Recipe[];
   setSelectedItem: (recipe: Recipe | null) => void;
-  setView: (view: 'list' | 'add' | 'view' | 'edit') => void;
+  setView: (view: 'list' | 'add' | 'edit') => void;
   setSortOrderTitle: (view: 'asc' | 'desc' | 'select') => void;
   favoriteRecipe: (title: string) => void;
   filterFavorite: '' | 'yes' | 'no';
@@ -12,7 +12,8 @@ const RecipeList: React.FC<{
   searchText: string;
   setSearchText: (query: string) => void;
   clearFilter: () => void;
-}> = ({ filteredRecipeItems, setSelectedItem, setView, setSortOrderTitle, favoriteRecipe, filterFavorite, setFilterFavorite, searchText, setSearchText, clearFilter }) => {
+  onEdit: (recipe: Recipe) => void;
+}> = ({ filteredRecipeItems, setSelectedItem, setView, setSortOrderTitle, favoriteRecipe, filterFavorite, setFilterFavorite, searchText, setSearchText, clearFilter, onEdit }) => {
 
   console.log('filteredRecipeItems', filteredRecipeItems)
   return (
@@ -74,7 +75,7 @@ const RecipeList: React.FC<{
                         <button type="button" className="btn btn-primary position-absolute start-0" onClick={() => favoriteRecipe(recipe.title)}>{recipe.isFavorite ? 'Remove' : 'Fav'}</button>
                       </div>
                       <div className='col p-3'>
-                        <div onClick={() => { setSelectedItem(recipe), setView('view') }}>
+                        <div onClick={() => onEdit(recipe)}>
                           <div className='title'><h3>{recipe.title}</h3></div>
                           <div className='desc'><p>{recipe.description}</p></div>
                           <div className='info row'>
