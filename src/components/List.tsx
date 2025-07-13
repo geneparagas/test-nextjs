@@ -7,7 +7,11 @@ const RecipeList: React.FC<{
   setView: (view: 'list' | 'add' | 'view' | 'edit') => void;
   setSortOrderTitle: (view: 'asc' | 'desc' | 'select') => void;
   favoriteRecipe: (title: string) => void;
-}> = ({ filteredRecipeItems, setSelectedItem, setView, setSortOrderTitle, favoriteRecipe }) => {
+  filterFavorite: '' | 'yes' | 'no';
+  setFilterFavorite: (filter: '' | 'yes' | 'no') => void;
+  searchText: string;
+  setSearchText: (query: string) => void;
+}> = ({ filteredRecipeItems, setSelectedItem, setView, setSortOrderTitle, favoriteRecipe, filterFavorite, setFilterFavorite, searchText, setSearchText }) => {
 
   console.log('filteredRecipeItems', filteredRecipeItems)
   return (
@@ -15,8 +19,8 @@ const RecipeList: React.FC<{
       <div className='container pt-5'>
         <div className='row'>
           <div className='col-4 p-3'>
-            <div className='bg-white shadow-md p-3'>
-              filters
+            <div className='bg-white shadow-md p-3 mb-3'>
+              Sort by title {searchText}
               <div className='row'>
                 <div className='col'>
                   <select className='form-select' onChange={(e) => setSortOrderTitle(e.target.value as 'asc' | 'desc' | 'select')}>
@@ -25,6 +29,31 @@ const RecipeList: React.FC<{
                     <option value='desc'>Desc</option>
                   </select>
                 </div>
+              </div>
+            </div>
+            <div className='p-3 bg-white shadow-md'>
+              Favorites
+              <div className='mb-2'>
+                <input className='form-check-input'
+                  id='favYes'
+                  type='checkbox'
+                  name='favoriteRadio'
+                  value='yes'
+                  checked={filterFavorite === 'yes'}
+                  onChange={() => setFilterFavorite('yes')}
+                />
+                <label htmlFor='favYes'>Yes</label>
+              </div>
+              <div className='mb-2'>
+                <input className='form-check-input'
+                  id='favNo'
+                  type='checkbox'
+                  name='favoriteRadio'
+                  value='no'
+                  checked={filterFavorite === 'no'}
+                  onChange={() => setFilterFavorite('no')}
+                />
+                <label htmlFor='favNo'>No</label>
               </div>
             </div>
           </div>
@@ -56,7 +85,7 @@ const RecipeList: React.FC<{
           <button type="button" className="btn btn-primary" onClick={() => setView('add')}>Add</button>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 
