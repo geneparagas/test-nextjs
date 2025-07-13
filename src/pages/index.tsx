@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Head from 'next/head'
 import RecipeForm, { Recipe } from '@/components/Form';
 import RecipeList from '@/components/List';
@@ -11,6 +11,7 @@ export default function Home() {
   const [recipeItems, setRecipeItems] = useState<Recipe[]>([]);
 
   const [selectedItem, setSelectedItem] = useState<Recipe | null>(null);
+  const [sortOrderTitle, setSortOrderTitle] = useState<'asc' | 'desc' | 'select'>('select');
 
   useEffect(() => {
     if (recipeItems.length === 0) return
@@ -33,6 +34,25 @@ export default function Home() {
 
     setRecipeItems(value);
   }, []);
+
+const filteredRecipeItems = useMemo(() => {
+  let currentRecipes: Recipe[] = [...recipeItems];
+
+  console.log('currentRecipes', currentRecipes)
+
+  if (sortOrderTitle === 'asc') {
+    currentRecipes.sort((a: Recipe, b: Recipe) => a.title.localeCompare(b.title));
+  } else if (sortOrderTitle === 'desc') {
+    currentRecipes.sort((a: Recipe, b: Recipe) => b.title.localeCompare(a.title));
+  }  
+
+  return currentRecipes;
+
+}, [recipeItems, sortOrderTitle]);
+
+const favoriteRecipe = (title: string) => {
+  setRecipeItems((prevRecipe: Recipe[]) => prevRecipe.map((recipe: Recipe) => recipe.title === title ? { ...recipe, isFavorite: !recipe.isFavorite } : recipe))
+}
 
   const addRecipe = (newRecipe: Recipe) => {
 
@@ -65,7 +85,13 @@ export default function Home() {
         </header>
       </Head>
       <main>
-        {view === 'list' && <RecipeList recipeItems={recipeItems} setSelectedItem={setSelectedItem} setView={setView} />}
+        {view === 'list' && <RecipeList 
+          filteredRecipeItems={filteredRecipeItems} 
+          setSelectedItem={setSelectedItem} 
+          setView={setView}
+          setSortOrderTitle={setSortOrderTitle}
+          favoriteRecipe={favoriteRecipe}
+        />}
         {view === 'add' && <RecipeForm onSubmit={addRecipe} />}
         {view === 'view' && <RecipeDetails recipe={selectedItem} onEdit={(recipe: Recipe) => {setSelectedItem(recipe); setView('edit'); }} onDelete={deleteRecipe} />}
         {view === 'edit' && selectedItem && <RecipeForm onSubmit={updateRecipe} loadData={selectedItem} editMode={true} />}
