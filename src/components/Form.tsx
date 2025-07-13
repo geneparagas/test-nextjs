@@ -29,7 +29,12 @@ const recipeSchema = z.object({
 
 export type Recipe = z.infer<typeof recipeSchema>;
 
-const RecipeForm: React.FC<{ onSubmit: (recipe: Recipe) => void; loadData?: Recipe; editMode?: boolean }> = ({ onSubmit, loadData, editMode }) => {
+const RecipeForm: React.FC<{ 
+    onSubmit: (recipe: Recipe) => void; 
+    loadData?: Recipe; 
+    editMode?: boolean; 
+    goBack: () => void;
+}> = ({ onSubmit, loadData, editMode, goBack }) => {
 
     const [formData, setFormData] = useState<Omit<Recipe, 'image'> & { image: string | File | null }>(loadData || {
         id: '',
@@ -156,12 +161,14 @@ const RecipeForm: React.FC<{ onSubmit: (recipe: Recipe) => void; loadData?: Reci
     return (
         <div className='container-fluid'>
             <div className='container pt-5'>
+                <div className='py-4'> <button type="button" className="btn btn-primary" onClick={goBack}>Back</button></div>
                 <form onSubmit={handleSubmit}>
                     <div className='row justify-content-center'>
                         <div className='col-4'>
                             <div className="mb-3">
-                                <label htmlFor="image" className="form-label">Image
-                                    {preview && (<img src={preview} className='w-100 h-auto' />)}
+                                <label htmlFor="image" className="form-label d-block">
+                                    
+                                    {preview ? <img src={preview} className='w-100 h-auto' /> : <img src='/assets/upload_image.png' className='w-100 h-auto' />}
                                 </label>
                                 <input
                                     type="file"
@@ -175,7 +182,7 @@ const RecipeForm: React.FC<{ onSubmit: (recipe: Recipe) => void; loadData?: Reci
                                 {errors.image && <div className="invalid-feedback">{errors.image}</div>}
                             </div>
                         </div>
-                        <div className='col bg-white shadow-md p-3'>
+                        <div className='col shadow-md px-3'>
 
                             <div className="mb-3">
                                 <label htmlFor="name" className="form-label">Your Name</label>

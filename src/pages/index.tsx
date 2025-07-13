@@ -77,6 +77,12 @@ export default function Home() {
     setRecipeItems((prevRecipe: Recipe[]) => prevRecipe.map((recipe: Recipe) => recipe.title === title ? { ...recipe, isFavorite: !recipe.isFavorite } : recipe))
   }
 
+  const clearFilter = () => {
+    setSearchText('');
+    setSortOrderTitle('select');
+    setFilterFavorite('');
+  }
+
   const addRecipe = (newRecipe: Recipe) => {
 
     setRecipeItems((prevRecipes: Recipe[]) => [...prevRecipes, { ...newRecipe }]);
@@ -143,10 +149,11 @@ export default function Home() {
           filterFavorite={filterFavorite}
           searchText={searchText}
           setSearchText={setSearchText}
+          clearFilter={clearFilter}
         />}
-        {view === 'add' && <RecipeForm onSubmit={addRecipe} />}
+        {view === 'add' && <RecipeForm onSubmit={addRecipe} goBack={() => setView('list')} />}
         {view === 'view' && <RecipeDetails recipe={selectedItem} onEdit={(recipe: Recipe) => { setSelectedItem(recipe); setView('edit'); }} onDelete={deleteRecipe} />}
-        {view === 'edit' && selectedItem && <RecipeForm onSubmit={updateRecipe} loadData={selectedItem} editMode={true} />}
+        {view === 'edit' && selectedItem && <RecipeForm onSubmit={updateRecipe} loadData={selectedItem} editMode={true} goBack={() => setView('list')} />}
       </main>
     </>
   )
