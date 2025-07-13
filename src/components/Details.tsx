@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Recipe } from './Form';
 
-const RecipeForm: React.FC<{ recipe: Recipe; onEdit: (recipe: Recipe) => void; onDelete: (name: string) => void; }> = ({ recipe, onEdit, onDelete }) => (
+const RecipeForm: React.FC<{ recipe: Recipe; onEdit: (recipe: Recipe) => void; onDelete: (name: string, image: string) => void; }> = ({ recipe, onEdit, onDelete }) => (
     <div className='container-fluid'>
         <div className='container pt-5'>
             <div className='row justify-content-center'>
@@ -18,7 +18,7 @@ const RecipeForm: React.FC<{ recipe: Recipe; onEdit: (recipe: Recipe) => void; o
                         <img src={recipe.image} className='w-25 h-auto' />
                     </div>
                     <button type="submit" className="btn btn-primary ml-3" onClick={() => onEdit(recipe)}>Edit</button>
-                    <button type="submit" className="btn btn-danger" onClick={() => onDelete(recipe.name)}>Delete</button>
+                    <button type="submit" className="btn btn-danger" onClick={() => onDelete(recipe.name, recipe.image)}>Delete</button>
                 </div>
             </div>
         </div>

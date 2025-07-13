@@ -42,9 +42,9 @@ export default function Home() {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-          const { id, value, type } = e.target;
-          console.log('value', value)
-      };
+    const { id, value, type } = e.target;
+    console.log('value', value)
+  };
 
   const filteredRecipeItems = useMemo(() => {
     let currentRecipes: Recipe[] = [...recipeItems];
@@ -91,26 +91,44 @@ export default function Home() {
     setView('list');
   }
 
-  const deleteRecipe = (name: string) => {
+  const deleteRecipe = async (name: string, imageUrl: string) => {
+    try {
+      const response = await fetch(`/api/upload?imageUrl=${encodeURIComponent(imageUrl)}`, {
+        method: 'DELETE',
+      });
 
-    setRecipeItems((prevRecipes: Recipe[]) =>
-      prevRecipes.filter((recipe: Recipe) => recipe.name !== name)
-    );
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to delete image on server:', errorData.message);
 
-    setView('list');
+        return;
+      }
+      console.log('Image deleted success');
+
+      setRecipeItems((prevRecipes: Recipe[]) =>
+        prevRecipes.filter((recipe: Recipe) => recipe.name !== name)
+      );
+
+      setView('list');
+    } catch (error) {
+      console.error('Network error during image deletion:', error);
+      return;
+    }
+
+
   }
 
   return (
     <>
       <Head>
         <header className="d-flex flex-wrap justify-content-center py-3 border-bottom">
-          Header2
+          Header
           <input
             type="search"
             className='form-control'
             placeholder="Search here"
             value={searchText}
-            onChange={(e) => {console.log(e);setSearchText(e.target.value)}}
+            onChange={(e) => { console.log(e); setSearchText(e.target.value) }}
           />
         </header>
       </Head>
