@@ -1,0 +1,21 @@
+.back {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.image {
+  border-radius: 5px;
+}
+
+.button_delete, .button_delete:hover {
+  background-color: #EE6400;
+  color: #fff;
+  margin-right: 1rem;
+}
+
+.button_save, .button_save:hover {
+  background-color: #435490;
+  color: #fff;
+}

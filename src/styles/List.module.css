@@ -1,0 +1,55 @@
+.recipe {
+  border-bottom: 1px solid #435490;
+}
+
+.recipe_container {
+  border: 1px solid #000;
+  border-radius: 15px;
+  height: 224px;
+  overflow: hidden;
+}
+
+.desc p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.favorite {
+  color: #FFFF00;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.favorite svg {
+  width: 35px;
+  height: 35px;
+}
+
+.listcontainer {
+  overflow: auto;
+  max-height: calc((100vh - 184px));
+  position: relative;
+}
+
+.listtext {
+  cursor: pointer;
+}
+
+.add {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  z-index: 999;
+  color: #435490;
+}
+
+.add svg {
+  width: 71px;
+  height: 71px;
+}
